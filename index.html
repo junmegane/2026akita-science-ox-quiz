@@ -1,68 +1,66 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>理科 ○×クイズ</title>
+<meta charset="UTF-8">
+<title>理科 ○×クイズ</title>
 
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
+<style>
+body{
+  font-family:sans-serif;
+  text-align:center;
+  padding:20px;
+}
 
-    button {
-      font-size: 18px;
-      margin: 10px;
-      padding: 10px 20px;
-      cursor: pointer;
-    }
+button{
+  font-size:18px;
+  margin:10px;
+  padding:10px 20px;
+  cursor:pointer;
+}
 
-    .hidden {
-      display: none;
-    }
+.hidden{display:none;}
 
-    .review {
-      text-align: left;
-      max-width: 800px;
-      margin: auto;
-    }
+.review{
+  text-align:left;
+  max-width:800px;
+  margin:auto;
+}
 
-    hr {
-      margin: 20px 0;
-    }
+hr{margin:20px 0;}
 
-    /* ===== 固定ナビボタン ===== */
-    #nav {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      z-index: 1000;
-    }
+/* ===== 固定 問題一覧ボタン ===== */
+#nav{
+  position:fixed;
+  top:15px;
+  right:15px;
+  z-index:1000;
+}
 
-    #nav a {
-      display: inline-block;
-      padding: 10px 16px;
-      background: #1976d2;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 20px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-    }
+#nav a{
+  display:inline-block;
+  padding:12px 18px;
+  background:#1976d2;
+  color:white;
+  text-decoration:none;
+  font-weight:bold;
+  border-radius:25px;
+  box-shadow:0 4px 8px rgba(0,0,0,0.25);
+  transition:0.2s;
+}
 
-    #nav a:hover {
-      background: #125aa0;
-    }
-  </style>
+#nav a:hover{
+  background:#0f4c8a;
+  transform:scale(1.05);
+}
+</style>
 </head>
 
 <body>
 
-<!-- 🔵 固定ボタン -->
+<!-- 🔵 問題一覧PDF -->
 <div id="nav">
-  <a href="https://akirunogiga-my.sharepoint.com/:x:/g/personal/t000739_akiruno_ed_jp/IQCaWnHFpaTSTa39bf1ALYrcAa16xAiHtCRu6NtEH0m8Ue8?e=33Ggbr" target="_blank">
-    ○×問題一覧
+  <a href="R7_mondai_list.pdf" target="_blank">
+    📘 ○×問題一覧
   </a>
 </div>
 
@@ -85,7 +83,7 @@
 <div id="resultScreen" class="hidden">
   <h2 id="score"></h2>
   <button onclick="restart()">🔁 もう一度挑戦</button>
-  <button onclick="showReview()">📘 解答振り返り</button>
+  <button onclick="showReview()">📊 解答振り返り</button>
 </div>
 
 <div id="reviewScreen" class="hidden">
@@ -95,94 +93,94 @@
 </div>
 
 <script>
-let questions = [];
-let quiz = [];
-let current = 0;
-let score = 0;
-let history = [];
+let questions=[];
+let quiz=[];
+let current=0;
+let score=0;
+let history=[];
 
 fetch("questions.csv")
-  .then(res => res.text())
-  .then(text => {
-    const lines = text.trim().split("\n").slice(1);
-    questions = lines.map(line => {
-      const [q, a, c] = line.split(",");
-      return { q, a: a.trim(), c };
-    });
-    startQuiz();
-  })
-  .catch(() => {
-    document.getElementById("loading").innerText = "読み込みに失敗しました";
+.then(res=>res.text())
+.then(text=>{
+  const lines=text.trim().split("\n").slice(1);
+  questions=lines.map(line=>{
+    const [q,a,c]=line.split(",");
+    return {q,a:a.trim(),c};
   });
+  startQuiz();
+})
+.catch(()=>{
+  document.getElementById("loading").innerText="読み込みに失敗しました";
+});
 
-function startQuiz() {
-  quiz = questions.sort(() => Math.random() - 0.5).slice(0, 10);
-  current = 0;
-  score = 0;
-  history = [];
+function startQuiz(){
+  quiz=questions.sort(()=>Math.random()-0.5).slice(0,10);
+  current=0;
+  score=0;
+  history=[];
   document.getElementById("loading").classList.add("hidden");
   document.getElementById("resultScreen").classList.add("hidden");
   document.getElementById("reviewScreen").classList.add("hidden");
   showQuestion();
 }
 
-function showQuestion() {
+function showQuestion(){
   document.getElementById("quiz").classList.remove("hidden");
   document.getElementById("explanation").classList.add("hidden");
-  document.getElementById("question").innerText = quiz[current].q;
+  document.getElementById("question").innerText=quiz[current].q;
 }
 
-function answer(ans) {
-  const q = quiz[current];
-  const correct = ans === q.a;
-  if (correct) score++;
+function answer(ans){
+  const q=quiz[current];
+  const correct=ans===q.a;
+  if(correct)score++;
 
   history.push({
-    question: q.q,
-    your: ans,
-    correct: q.a,
-    comment: q.c
+    question:q.q,
+    your:ans,
+    correct:q.a,
+    comment:q.c
   });
 
   document.getElementById("quiz").classList.add("hidden");
   document.getElementById("explanation").classList.remove("hidden");
-  document.getElementById("result").innerText = correct ? "⭕ 正解！" : "❌ 不正解";
-  document.getElementById("comment").innerText = q.c;
+  document.getElementById("result").innerText=correct?"⭕ 正解！":"❌ 不正解";
+  document.getElementById("comment").innerText=q.c;
 }
 
-function nextQuestion() {
+function nextQuestion(){
   current++;
-  if (current < quiz.length) {
+  if(current<quiz.length){
     showQuestion();
-  } else {
+  }else{
     showResult();
   }
 }
 
-function showResult() {
+function showResult(){
   document.getElementById("explanation").classList.add("hidden");
   document.getElementById("resultScreen").classList.remove("hidden");
-  document.getElementById("score").innerText = `10問中 ${score} 問 正解！`;
+  document.getElementById("score").innerText=`10問中 ${score} 問 正解！`;
 }
 
-function restart() {
+function restart(){
   startQuiz();
 }
 
-function showReview() {
+function showReview(){
   document.getElementById("resultScreen").classList.add("hidden");
   document.getElementById("reviewScreen").classList.remove("hidden");
 
-  const list = document.getElementById("reviewList");
-  list.innerHTML = "";
+  const list=document.getElementById("reviewList");
+  list.innerHTML="";
 
-  history.forEach((h, i) => {
-    list.innerHTML += `
+  history.forEach((h,i)=>{
+    list.innerHTML+=`
       <p>
-        <strong>Q${i + 1}：</strong>${h.question}<br>
-        あなたの答え：${h.your}<br>
-        正解：${h.correct}<br>
-        解説：${h.comment}
+      <strong>Q${i+1}：</strong>${h.question}<br>
+      あなたの答え：${h.your}<br>
+      正解：${h.correct}<br>
+      解説：${h.comment}
       </p>
       <hr>
     `;
