@@ -13,7 +13,7 @@ body{
   margin:0;
 }
 
-/* ===== 問題カード ===== */
+/* ===== カード ===== */
 .card{
   background:white;
   max-width:750px;
@@ -37,7 +37,7 @@ body{
   margin:20px 0 30px 0;
 }
 
-/* ボタン共通 */
+/* ===== ボタン共通 ===== */
 button{
   font-size:22px;
   margin:15px;
@@ -45,26 +45,34 @@ button{
   border:none;
   border-radius:15px;
   cursor:pointer;
-  color:white;
   transition:0.2s;
 }
 
-/* ○ボタン 赤 */
+/* ○ボタン */
 .btn-maru{
   background:#e53935;
+  color:white;
 }
-
 .btn-maru:hover{
   background:#b71c1c;
 }
 
-/* ×ボタン 青 */
+/* ×ボタン */
 .btn-batsu{
   background:#1e88e5;
+  color:white;
 }
-
 .btn-batsu:hover{
   background:#0d47a1;
+}
+
+/* 次の問題へボタン（黒文字） */
+.btn-next{
+  background:#e0e0e0;
+  color:black;
+}
+.btn-next:hover{
+  background:#cfcfcf;
 }
 
 .hidden{display:none;}
@@ -94,7 +102,6 @@ button{
   box-shadow:0 4px 8px rgba(0,0,0,0.25);
   transition:0.2s;
 }
-
 #nav a:hover{
   background:#0f4c8a;
   transform:scale(1.05);
@@ -104,7 +111,6 @@ button{
 
 <body>
 
-<!-- 問題一覧PDF -->
 <div id="nav">
   <a href="R7_mondai_list.pdf" target="_blank">
     📘 ○×問題一覧
@@ -125,19 +131,19 @@ button{
 <div id="explanation" class="hidden card">
   <h3 id="result"></h3>
   <p id="comment"></p>
-  <button onclick="nextQuestion()">次の問題へ</button>
+  <button class="btn-next" onclick="nextQuestion()">次の問題へ</button>
 </div>
 
 <div id="resultScreen" class="hidden card">
   <h2 id="score"></h2>
-  <button onclick="restart()">🔁 もう一度挑戦</button>
-  <button onclick="showReview()">📊 解答振り返り</button>
+  <button class="btn-next" onclick="restart()">🔁 もう一度挑戦</button>
+  <button class="btn-next" onclick="showReview()">📊 解答振り返り</button>
 </div>
 
 <div id="reviewScreen" class="hidden card">
   <h2>解答振り返り</h2>
   <div id="reviewList" class="review"></div>
-  <button onclick="restart()">🔁 再挑戦</button>
+  <button class="btn-next" onclick="restart()">🔁 再挑戦</button>
 </div>
 
 <script>
@@ -175,10 +181,8 @@ function startQuiz(){
 function showQuestion(){
   document.getElementById("quiz").classList.remove("hidden");
   document.getElementById("explanation").classList.add("hidden");
-
   document.getElementById("questionNumber").innerText=
     `第 ${current+1} 問 / 10 問`;
-
   document.getElementById("question").innerText=
     quiz[current].q;
 }
